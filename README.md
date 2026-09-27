@@ -10,6 +10,14 @@ olympic davno; karel got lady karneval; queen bohemian rapsody
 
 Soubory se jmenují **`<Název písně> - <Interpret>.mp3`**, např. `Dávno - Olympic.mp3`.
 
+## Instalace
+1. Stáhni `AlkaMusic.exe` z [nejnovějšího vydání](https://github.com/Bacilek/AlkaMusic/releases/latest) (nebo ho přenes flashkou).
+2. Dvakrát na něj klikni. Pokud se objeví *„Systém Windows ochránil váš počítač“*, klikni na *Další informace* → *Přesto spustit* (jen napoprvé; exe není podepsané). Při přenosu flashkou se okno vůbec neukáže.
+3. Aplikace se sama nainstaluje do `%LOCALAPPDATA%\Programs\AlkaMusic`, vytvoří zástupce **AlkaMusic** (hranostaj) na ploše a v nabídce Start a spustí se. Stažený soubor pak můžeš smazat.
+
+**Aktualizace:** stačí stáhnout novější `AlkaMusic.exe` a spustit ho (aplikace přitom nesmí běžet), přepíše starou verzi.
+**Odinstalace:** smaž `%LOCALAPPDATA%\Programs\AlkaMusic`, `%LOCALAPPDATA%\AlkaMusic` a zástupce. Složka `Pisnicky` zůstane.
+
 ## Jak to funguje
 1. Nejdřív se hledá na **YouTube Music** mezi písněmi (studiové verze, dobře zvládá překlepy).
 2. Když tam nic nesedí, použije se běžné hledání na YouTube a [ranker](alkamusic/ranker.py) vybere nejlepší video. Přeskakuje živáky, covery, remixy, karaoke a hodinové smyčky (pokud je výslovně nechceš).

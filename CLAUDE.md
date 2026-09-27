@@ -19,6 +19,7 @@ Windows appka pro uživatelovu maminku (netechnická uživatelka, Samsung telefo
 - `ranker.py` – skórování (Topic kanál bonus, penalizace live/cover/remix/karaoke/…, pokud nejsou v dotazu; délka <1 min / >10 min).
 - `naming.py` – čištění titulů („(Official Video)“, „[HD]“, rok…), `artist_title`, `safe_filename`.
 - `history.py` – JSON video_id → cesta; duplicity se přeskočí („už máš“), pokud soubor stále existuje.
+- `install.py` – samoinstalace (jen frozen exe): když exe neběží z `%LOCALAPPDATA%\Programs\AlkaMusic`, zkopíruje se tam (= i aktualizace), smaže `:Zone.Identifier` (SmartScreen se už neptá), vytvoří zástupce na ploše + ve Start menu (PowerShell WScript.Shell) a spustí nainstalovanou kopii s `PYINSTALLER_RESET_ENVIRONMENT=1`. Selhání → log a běh z aktuálního místa.
 - `ui.py` – jedno okno; řádky seznamu jsou obyčejné `tk.Label` (rychlé i pro stovky položek), UI polluje joby přes `after(250)`.
 
 ## Příkazy
@@ -27,7 +28,12 @@ Windows appka pro uživatelovu maminku (netechnická uživatelka, Samsung telefo
 - Build: `powershell -ExecutionPolicy Bypass -File .\build.ps1` → `dist\AlkaMusic.exe` (~20 MB; build spouští i testy).
 - Ruční e2e ověření: engine lze použít bez GUI (`Engine(); start_setup(); add(Job(q))`, přepsat `out_dir`); izolovaný „čistý PC“ test = nastavit `LOCALAPPDATA` na prázdnou složku a odebrat ffmpeg z PATH.
 
+## Vydání (uživatel chce mít aktuální build vždy na GitHubu)
+Po každé změně kódu: build → commit → push `app` i `main` (main = fast-forward z `app`) → nový GitHub Release s `dist\AlkaMusic.exe`:
+`gh release create vX.Y.Z dist/AlkaMusic.exe --target main --title "AlkaMusic vX.Y.Z" --notes "…"` (verze zvyšovat; exe se do gitu necommituje).
+Podepisování exe: neřešeno (certifikát drahý a SmartScreen reputaci stejně nezaručí); SmartScreen se obchází přenosem flashkou / samoinstalace odstraní MOTW.
+
 ## Pracovní zvyklosti
-- **Commitovat průběžně** po každém logickém kroku; pracuje se ve větvi `app` (remote `origin` = github.com/Bacilek/AlkaMusic).
+- **Commitovat průběžně** po každém logickém kroku a **pushovat** (i pull, pokud je remote napřed); pracuje se ve větvi `app`, `main` se fast-forwarduje (remote `origin` = github.com/Bacilek/AlkaMusic).
 - Pozor: Windows PowerShell 5.1 `Get-Content`/`Set-Content` bez `-Encoding utf8` **rozbije diakritiku** v UTF-8 souborech – pro hromadné úpravy textu používat Python nebo nástroje Edit/Write. Commit messages přes Bash heredoc (`git commit -F -`), ne přes PowerShell here-string.
 - Po změně UI ověřit screenshotem (Pillow `ImageGrab` ve skriptu, který App spustí a vloží text).

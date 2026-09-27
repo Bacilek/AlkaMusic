@@ -50,8 +50,8 @@ SQUARE_COVER = (
 OUT_FOLDER = "Pisnicky"
 
 
-def songs_dir():
-    """'Pisnicky' on the user's desktop (respects a moved/OneDrive desktop)."""
+def desktop_dir():
+    """The user's desktop (respects a moved/OneDrive desktop)."""
     try:
         guid = (ctypes.c_byte * 16).from_buffer_copy(
             uuid.UUID("{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}").bytes_le  # FOLDERID_Desktop
@@ -62,7 +62,11 @@ def songs_dir():
         ctypes.windll.ole32.CoTaskMemFree(buf)
     except (AttributeError, OSError, TypeError):
         base = Path.home() / "Desktop"
-    return base / OUT_FOLDER
+    return base
+
+
+def songs_dir():
+    return desktop_dir() / OUT_FOLDER
 
 
 def parse_input(text):
