@@ -11,12 +11,12 @@ olympic davno; karel got lady karneval; queen bohemian rapsody
 Soubory se jmenují **`<Název písně> - <Interpret>.mp3`**, např. `Dávno - Olympic.mp3`.
 
 ## Instalace
-1. Stáhni `AlkaMusic.exe` z [nejnovějšího vydání](https://github.com/Bacilek/AlkaMusic/releases/latest) (nebo ho přenes flashkou).
-2. Dvakrát na něj klikni. Pokud se objeví *„Systém Windows ochránil váš počítač“*, klikni na *Další informace* → *Přesto spustit* (jen napoprvé; exe není podepsané). Při přenosu flashkou se okno vůbec neukáže.
-3. Aplikace se sama nainstaluje do `%LOCALAPPDATA%\Programs\AlkaMusic`, vytvoří zástupce **AlkaMusic** (hranostaj) na ploše a v nabídce Start a spustí se. Stažený soubor pak můžeš smazat.
+1. Stáhni `AlkaMusic-Setup-<verze>.exe` z [nejnovějšího vydání](https://github.com/Bacilek/AlkaMusic/releases/latest) (nebo ho přenes flashkou).
+2. Spusť ho. Pokud se objeví *„Systém Windows ochránil váš počítač“*, klikni na *Další informace* → *Přesto spustit* (instalátor není podepsaný). Při přenosu flashkou se okno neukáže.
+3. Instalace proběhne sama (bez admin práv) do `%LOCALAPPDATA%\Programs\AlkaMusic` a vytvoří zástupce **AlkaMusic** (hranostaj) na ploše a v nabídce Start.
 
-**Aktualizace:** stačí stáhnout novější `AlkaMusic.exe` a spustit ho (aplikace přitom nesmí běžet), přepíše starou verzi.
-**Odinstalace:** smaž `%LOCALAPPDATA%\Programs\AlkaMusic`, `%LOCALAPPDATA%\AlkaMusic` a zástupce. Složka `Pisnicky` zůstane.
+**Aktualizace:** stáhni a spusť novější instalátor, přepíše starou verzi.
+**Odinstalace:** *Nastavení → Aplikace → Nainstalované aplikace → AlkaMusic → Odinstalovat*. Smaže aplikaci, zástupce i stažené nástroje (yt-dlp, ffmpeg), historii a log. Složka `Pisnicky` s písničkami zůstane.
 
 ## Jak to funguje
 1. Nejdřív se hledá na **YouTube Music** mezi písněmi (studiové verze, dobře zvládá překlepy).
@@ -38,7 +38,8 @@ python -m venv .venv
 .\.venv\Scripts\python -m pip install -r requirements.txt
 .\.venv\Scripts\python -m alkamusic      # spuštění
 .\.venv\Scripts\python -m pytest         # testy
-.\build.ps1                              # testy + dist\AlkaMusic.exe
+.\build.ps1                              # testy + dist\AlkaMusic\ + dist\AlkaMusic-Setup-<verze>.exe
+                                         # (potřebuje Inno Setup: winget install JRSoftware.InnoSetup)
 .\.venv\Scripts\python assets\make_icon.py   # přegeneruje ikonu hranostaje
 ```
 

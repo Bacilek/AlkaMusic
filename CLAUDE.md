@@ -4,7 +4,7 @@
 Windows appka pro uživatelovu maminku (netechnická uživatelka, Samsung telefon, bez Spotify). Vloží názvy písniček oddělené `;` (nebo po řádcích, klidně s překlepy) → appka sama najde nejlepší verzi na YouTube a uloží MP3. Priorita: **jednoduché, svižné, minimum vizuálního smogu**. Komunikace s uživatelem a veškeré UI texty **česky**.
 
 ## Pevná rozhodnutí (neměnit bez dotazu)
-- **Windows desktop** (Python + CustomTkinter → PyInstaller onefile exe). Android verze zvažována a odložena.
+- **Windows desktop** (Python + CustomTkinter → PyInstaller **onedir** → **Inno Setup instalátor** `AlkaMusic-Setup-<verze>.exe`). Uživatel chtěl instalační balíček místo holého exe (působí bezpečněji; onefile navíc spouštěl hlášku „This app can't run on your PC“). Android verze zvažována a odložena.
 - **Plně automatický režim**, žádné vybírání z výsledků.
 - Výstup: **`Plocha\Pisnicky`** (`engine.songs_dir()`, přes `FOLDERID_Desktop`, OneDrive-safe), vytvoří se při startu `Engine`.
 - Název souboru i zobrazení v UI: **`<Název písně> - <Interpret>`** (`naming.display_name`).
@@ -19,19 +19,21 @@ Windows appka pro uživatelovu maminku (netechnická uživatelka, Samsung telefo
 - `ranker.py` – skórování (Topic kanál bonus, penalizace live/cover/remix/karaoke/…, pokud nejsou v dotazu; délka <1 min / >10 min).
 - `naming.py` – čištění titulů („(Official Video)“, „[HD]“, rok…), `artist_title`, `safe_filename`.
 - `history.py` – JSON video_id → cesta; duplicity se přeskočí („už máš“), pokud soubor stále existuje.
-- `install.py` – samoinstalace (jen frozen exe): když exe neběží z `%LOCALAPPDATA%\Programs\AlkaMusic`, zkopíruje se tam (= i aktualizace), smaže `:Zone.Identifier` (SmartScreen se už neptá), vytvoří zástupce na ploše + ve Start menu (PowerShell WScript.Shell) a spustí nainstalovanou kopii s `PYINSTALLER_RESET_ENVIRONMENT=1`. Selhání → log a běh z aktuálního místa.
+- `__init__.py` – `__version__` (jediný zdroj verze; build z ní generuje version resource exe i název instalátoru).
 - `ui.py` – jedno okno; řádky seznamu jsou obyčejné `tk.Label` (rychlé i pro stovky položek), UI polluje joby přes `after(250)`.
 
 ## Příkazy
 - Testy: `.\.venv\Scripts\python -m pytest -q` (tests/test_ranker.py – ranker, naming, parse_input).
 - Spuštění: `.\.venv\Scripts\python -m alkamusic`
-- Build: `powershell -ExecutionPolicy Bypass -File .\build.ps1` → `dist\AlkaMusic.exe` (~20 MB; build spouští i testy).
+- Build: `powershell -ExecutionPolicy Bypass -File .\build.ps1` → testy, `dist\AlkaMusic\` (onedir, exe s version info přes `installer/make_version_info.py`) a `dist\AlkaMusic-Setup-<verze>.exe` (~15 MB, `installer/AlkaMusic.iss`, Inno Setup v `%LOCALAPPDATA%\Programs\Inno Setup 6`, instalace `winget install JRSoftware.InnoSetup`).
+- Instalátor: per-user (bez admina) do `%LOCALAPPDATA%\Programs\AlkaMusic`, zástupci plocha + Start, záznam v Aplikace. Odinstalace nejdřív `taskkill /T` běžící appky, pak smaže `{app}` i `%LOCALAPPDATA%\AlkaMusic` (yt-dlp, ffmpeg, historie, log); `Plocha\Pisnicky` nechává.
+- Test instalátoru: `Setup.exe /VERYSILENT /SUPPRESSMSGBOXES /NORESTART`, odinstalace `unins000.exe` se stejnými přepínači.
 - Ruční e2e ověření: engine lze použít bez GUI (`Engine(); start_setup(); add(Job(q))`, přepsat `out_dir`); izolovaný „čistý PC“ test = nastavit `LOCALAPPDATA` na prázdnou složku a odebrat ffmpeg z PATH.
 
 ## Vydání (uživatel chce mít aktuální build vždy na GitHubu)
-Po každé změně kódu: build → commit → push `app` i `main` (main = fast-forward z `app`) → nový GitHub Release s `dist\AlkaMusic.exe`:
-`gh release create vX.Y.Z dist/AlkaMusic.exe --target main --title "AlkaMusic vX.Y.Z" --notes "…"` (verze zvyšovat; exe se do gitu necommituje).
-Podepisování exe: neřešeno (certifikát drahý a SmartScreen reputaci stejně nezaručí); SmartScreen se obchází přenosem flashkou / samoinstalace odstraní MOTW.
+Po každé změně kódu: zvýšit `__version__` → build → commit → push `app` i `main` (main = fast-forward z `app`) → nový GitHub Release s instalátorem:
+`gh release create vX.Y.Z dist/AlkaMusic-Setup-X.Y.Z.exe --target main --title "AlkaMusic vX.Y.Z" --notes "…"` (build artefakty se do gitu necommitují).
+Podepisování exe: neřešeno (certifikát drahý a SmartScreen reputaci stejně nezaručí); SmartScreen se u staženého instalátoru ukáže jednou (Další informace → Přesto spustit), při přenosu flashkou vůbec.
 
 ## Pracovní zvyklosti
 - **Commitovat průběžně** po každém logickém kroku a **pushovat** (i pull, pokud je remote napřed); pracuje se ve větvi `app`, `main` se fast-forwarduje (remote `origin` = github.com/Bacilek/AlkaMusic).

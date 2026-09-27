@@ -1,11 +1,7 @@
-from alkamusic.install import ensure_installed
+from alkamusic.ui import App
 
 
 def main():
-    if ensure_installed():
-        return
-    from alkamusic.ui import App
-
     App().mainloop()
 
 
