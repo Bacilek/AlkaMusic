@@ -80,6 +80,11 @@ def test_keeps_meaningful_brackets():
     assert naming.artist_title("Queen - Don't Stop Me Now (feat. Brian)", "x") == ("Queen", "Don't Stop Me Now (feat. Brian)")
 
 
+def test_display_name_is_song_first():
+    assert naming.display_name("Olympic", "Dávno") == "Dávno - Olympic"
+    assert naming.display_name("", "Dávno") == "Dávno"
+
+
 def test_safe_filename():
     assert naming.safe_filename('AC/DC - What? "Yes"') == "ACDC - What Yes"
 

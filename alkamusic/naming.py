@@ -1,4 +1,4 @@
-"""Turns YouTube titles into clean 'Artist - Title' names."""
+"""Parses YouTube titles (usually 'Artist - Title') and builds '<Song> - <Artist>' file names."""
 
 import re
 
@@ -31,7 +31,8 @@ def artist_title(title, channel):
 
 
 def display_name(artist, title):
-    return f"{artist} - {title}" if artist else title
+    """Name used for the file and in the UI: '<Song> - <Artist>'."""
+    return f"{title} - {artist}" if artist else title
 
 
 def safe_filename(name):
