@@ -47,19 +47,22 @@ SQUARE_COVER = (
 )
 
 
-def music_dir():
-    """The user's Windows 'Music' folder (respects a moved/OneDrive folder) + AlkaMusic."""
+OUT_FOLDER = "Pisnicky"
+
+
+def songs_dir():
+    """'Pisnicky' on the user's desktop (respects a moved/OneDrive desktop)."""
     try:
         guid = (ctypes.c_byte * 16).from_buffer_copy(
-            uuid.UUID("{4BD8D571-6D19-48D3-BE97-422220080E43}").bytes_le  # FOLDERID_Music
+            uuid.UUID("{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}").bytes_le  # FOLDERID_Desktop
         )
         buf = ctypes.c_wchar_p()
         ctypes.windll.shell32.SHGetKnownFolderPath(ctypes.byref(guid), 0, None, ctypes.byref(buf))
         base = Path(buf.value)
         ctypes.windll.ole32.CoTaskMemFree(buf)
     except (AttributeError, OSError, TypeError):
-        base = Path.home() / "Music"
-    return base / "AlkaMusic"
+        base = Path.home() / "Desktop"
+    return base / OUT_FOLDER
 
 
 def parse_input(text):
@@ -107,7 +110,8 @@ class Job:
 
 class Engine:
     def __init__(self):
-        self.out_dir = music_dir()
+        self.out_dir = songs_dir()
+        self.out_dir.mkdir(parents=True, exist_ok=True)
         self.ffmpeg_dir = BIN_DIR
         self.history = History(APP_DIR / "history.json")
         self.status = ""  # human readable setup status for the UI

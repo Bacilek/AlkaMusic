@@ -9,7 +9,7 @@ from tkinter import messagebox
 import customtkinter as ctk
 from PIL import Image
 
-from .engine import Engine, Job, parse_input
+from .engine import OUT_FOLDER, Engine, Job, parse_input
 
 FONT = "Segoe UI"
 BG = "#FFFFFF"
@@ -162,7 +162,7 @@ class App(ctk.CTk):
             if finished < len(jobs):
                 self.summary.configure(text=f"Staženo {ok} z {len(jobs)}")
             else:
-                self.summary.configure(text=f"Hotovo! {ok} z {len(jobs)} písniček je ve složce Hudba\\AlkaMusic.")
+                self.summary.configure(text=f"Hotovo! {ok} z {len(jobs)} písniček je ve složce {OUT_FOLDER} na ploše.")
         self.after(250, self._tick)
 
     def _busy(self):

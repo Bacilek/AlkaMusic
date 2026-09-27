@@ -1,6 +1,6 @@
 # AlkaMusic
 
-Jednoduchá aplikace pro Windows: napíšeš názvy písniček oddělené středníkem (klidně s překlepy), klikneš na **Stáhnout** a aplikace je sama najde na YouTube a uloží jako MP3 (s interpretem, názvem a obalem) do složky `Hudba\AlkaMusic`.
+Jednoduchá aplikace pro Windows: napíšeš názvy písniček oddělené středníkem (klidně s překlepy), klikneš na **Stáhnout** a aplikace je sama najde na YouTube a uloží jako MP3 (s interpretem, názvem a obalem) do složky `Pisnicky` na ploše (vytvoří ji sama, když neexistuje).
 
 ```
 olympic davno; karel got lady karneval; queen bohemian rapsody
@@ -25,7 +25,7 @@ python -m venv .venv
 ```
 
 ## Do telefonu
-Obsah `Hudba\AlkaMusic` zkopíruj kabelem do složky `Music` v telefonu (nebo přes Quick Share). Samsung Hudba písničky zobrazí i s obaly.
+Obsah složky `Pisnicky` z plochy zkopíruj kabelem do složky `Music` v telefonu (nebo přes Quick Share). Samsung Hudba písničky zobrazí i s obaly.
 
 ---
 Jen pro osobní použití. Stahování z YouTube je v rozporu s jeho podmínkami užití.
