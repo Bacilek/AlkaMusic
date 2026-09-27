@@ -7,6 +7,7 @@ from pathlib import Path
 from tkinter import messagebox
 
 import customtkinter as ctk
+from PIL import Image
 
 from .engine import Engine, Job, parse_input
 
@@ -74,7 +75,8 @@ class App(ctk.CTk):
         ctk.set_appearance_mode("light")
         super().__init__(fg_color=BG)
         self.title("AlkaMusic")
-        icon = Path(getattr(sys, "_MEIPASS", Path(__file__).parent.parent)) / "assets" / "icon.ico"
+        assets = Path(getattr(sys, "_MEIPASS", Path(__file__).parent.parent)) / "assets"
+        icon = assets / "icon.ico"
         if icon.exists():
             self.after(250, lambda: self.iconbitmap(icon))  # CTk overrides an icon set too early
         self.geometry("760x760")
@@ -84,9 +86,15 @@ class App(ctk.CTk):
         self.rows = []
 
         pad = {"padx": 28}
+        header = ctk.CTkFrame(self, fg_color=BG)
+        header.pack(fill="x", pady=(20, 8), **pad)
+        avatar = assets / "icon.png"
+        if avatar.exists():
+            image = ctk.CTkImage(Image.open(avatar), size=(52, 52))
+            ctk.CTkLabel(header, image=image, text="").pack(side="left", padx=(0, 14))
         ctk.CTkLabel(
-            self, text="Napiš písničky, odděl je středníkem  ;", font=(FONT, 22, "bold"), text_color=TEXT
-        ).pack(anchor="w", pady=(24, 8), **pad)
+            header, text="Napiš písničky, odděl je středníkem  ;", font=(FONT, 22, "bold"), text_color=TEXT
+        ).pack(side="left")
 
         self.input = ctk.CTkTextbox(
             self, height=130, font=(FONT, 17), wrap="word", border_width=2,
