@@ -1,0 +1,6 @@
+customtkinter
+mutagen
+# dev
+pillow
+pyinstaller
+pytest
